@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Quiz</h2>
+    <div id="quiz-container">
+        <p id="question-text"></p>
+        <button class="option" onclick="answer(1)"></button>
+        <button class="option" onclick="answer(2)"></button>
+        <button class="option" onclick="answer(3)"></button>
+        <button class="option" onclick="answer(4)"></button>
+    </div>
+    <button onclick="nextQuestion()">Neste</button>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

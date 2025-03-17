@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hvahoot - Hjem</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Velkommen til Hvahoot!</h1>
+        <nav>
+            <a href="{{ url_for('register') }}">Registrer deg</a>
+            <a href="{{ url_for('login') }}">Logg inn</a>
+            <a href="{{ url_for('quiz') }}">Start Quiz</a>
+            <a href="{{ url_for('scoreboard') }}">Poengtavle</a>
+        </nav>
+    </header>
+    <main>
+        <p>Test kunnskapene dine i spennende quizer og sammenlign resultatene dine med andre!</p>
+    </main>
+</body>
+</html>
