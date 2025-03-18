@@ -7,12 +7,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>Logg inn</h2>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Brukernavn" required>
-        <input type="password" name="password" placeholder="Passord" required>
-        <button type="submit">Logg inn</button>
-    </form>
-    <a href="{{ url_for('register') }}">Har du ikke en konto? Registrer deg her.</a>
+    <header>
+        <h1>Logg inn til Hvahoot</h1>
+    </header>
+
+    <main>
+        <form method="POST">
+            <label for="username">Brukernavn:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Passord:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Logg inn</button>
+        </form>
+
+        <p>Har du ikke en konto? <a href="{{ url_for('register') }}">Registrer deg her</a>.</p>
+
+        <hr>
+
+        <!-- Guest Button -->
+        <a href="{{ url_for('guest') }}">
+            <button>Fortsett som gjest</button>
+        </a>
+    </main>
 </body>
 </html>

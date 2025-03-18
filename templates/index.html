@@ -16,7 +16,27 @@
             <a href="{{ url_for('scoreboard') }}">Poengtavle</a>
         </nav>
     </header>
+    
     <main>
+        {% if 'user_id' not in session %}
+            <form method="POST" action="{{ url_for('login') }}">
+                <label>Username:</label>
+                <input type="text" name="username" required>
+                
+                <label>Password:</label>
+                <input type="password" name="password" required>
+                
+                <button type="submit">Login</button>
+            </form>
+            
+            <a href="{{ url_for('guest') }}">
+                <button>Continue as Guest</button>
+            </a>
+        {% else %}
+            <p>Du er logget inn som {{ session.get('username', 'ukjent bruker') }}</p>
+            <a href="{{ url_for('logout') }}"><button>Logg ut</button></a>
+        {% endif %}
+
         <p>Test kunnskapene dine i spennende quizer og sammenlign resultatene dine med andre!</p>
     </main>
 </body>
