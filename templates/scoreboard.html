@@ -14,6 +14,13 @@
             <th>Quiz</th>
             <th>Poeng</th>
         </tr>
+        {% for user, quiz, score in scores %}
+        <tr>
+            <td>{{ user }}</td>
+            <td>{{ quiz }}</td>
+            <td>{{ score }}</td>
+        </tr>
+        {% endfor %}
     </table>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
