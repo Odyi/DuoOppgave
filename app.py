@@ -90,7 +90,7 @@ def guest():
     
     cursor.execute("SELECT id FROM users WHERE username = ?", (guest_name,))
     guest_id = cursor.fetchone()[0]
-    
+
     session['user_id'] = guest_id
     session['is_guest'] = True  # Mark this session as a guest session
 
@@ -127,10 +127,10 @@ def scoreboard():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     cursor.execute('''
-        SELECT users.username, quizzes.title, scores.score
+        SELECT users.username, IFNULL(quizzes.title, 'Ukjent Quiz'), scores.score
         FROM scores
         JOIN users ON scores.user_id = users.id
-        JOIN quizzes ON scores.quiz_id = quizzes.id
+        LEFT JOIN quizzes ON scores.quiz_id = quizzes.id
         ORDER BY scores.score DESC
     ''')
     scores = cursor.fetchall()
