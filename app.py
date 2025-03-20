@@ -144,3 +144,29 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 #fix scoreboard
+
+
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/quiz")
+def quiz():
+    return render_template("quiz.html")
+
+@app.route("/scoreboard")
+def scoreboard():
+    return render_template("scoreboard.html")
+
+@app.route("/registrer")
+def register():
+    return render_template("registrer.html")
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+if __name__ == "__main__":
+    app.run(debug=True)
