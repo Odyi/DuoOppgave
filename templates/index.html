@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="no">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hvahoot - Hjem</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <header>
         <h1>Velkommen til Hvahoot!</h1>
@@ -16,35 +18,29 @@
             <a href="{{ url_for('scoreboard') }}">Poengtavle</a>
         </nav>
     </header>
-    
+
     <main>
         {% if 'user_id' not in session %}
-            <form method="POST" action="{{ url_for('login') }}">
-                <label>Username:</label>
-                <input type="text" name="username" required>
-                
-                <label>Password:</label>
-                <input type="password" name="password" required>
-                
-                <button type="submit">Login</button>
-            </form>
-            
-            <a href="{{ url_for('guest') }}">
-                <button>Continue as Guest</button>
-            </a>
+        <form method="POST" action="{{ url_for('login') }}">
+            <label>Username:</label>
+            <input type="text" name="username" required>
+
+            <label>Password:</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <a href="{{ url_for('guest') }}">
+            <button>Continue as Guest</button>
+        </a>
         {% else %}
-            <p>Du er logget inn som {{ session.get('username', 'Guest bruker') }}</p>
-            <a href="{{ url_for('logout') }}"><button>Logg ut</button></a>
+        <p>Du er logget inn som {{ session.get('username', 'Guest bruker') }}</p>
+        <a href="{{ url_for('logout') }}"><button>Logg ut</button></a>
         {% endif %}
 
         <p>Test kunnskapene dine i spennende quizer og sammenlign resultatene dine med andre!</p>
     </main>
 </body>
+
 </html>
-
-
-
-
- 
-
- 
