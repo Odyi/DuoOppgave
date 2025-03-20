@@ -13,6 +13,39 @@
         <h1>Logg inn til Hvahoot</h1>
     </header>
 
+
+
+    <!DOCTYPE html>
+    <html lang="no">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Min Nettside</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="{{ url_for('home') }}">Hjem</a></li>
+                <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
+                <li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
+                <li><a href="{{ url_for('register') }}">Registrer</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            </ul>
+        </nav>
+        
+    
+        <div class="content">
+            <!-- Sideinnhold her -->
+        </div>
+    </body>
+    </html>
+    
+
+
+
+
+
     <main>
         <form method="POST">
             <label for="username">Brukernavn:</label>
