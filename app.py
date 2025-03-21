@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
-import uuid  
+import uuid
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -16,7 +16,8 @@ def init_db():
                         password TEXT)''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS quizzes (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        title TEXT NOT NULL)''')
+                        title TEXT NOT NULL,
+                        creator_id INTEGER)''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS questions (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         quiz_id INTEGER,
@@ -31,6 +32,13 @@ def init_db():
                         user_id INTEGER,
                         quiz_id INTEGER,
                         score INTEGER)''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS winners (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_id INTEGER,
+                        points INTEGER,
+                        quiz_id INTEGER,
+                        FOREIGN KEY (user_id) REFERENCES users(id),
+                        FOREIGN KEY (quiz_id) REFERENCES quizzes(id))''')
     conn.commit()
     conn.close()
 
@@ -39,7 +47,12 @@ def index():
     """Redirect users to login/register if they are not authenticated."""
     if 'user_id' not in session:
         return redirect(url_for('register'))
-    return render_template('index.html')
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM quizzes")
+    quizzes = cursor.fetchall()
+    conn.close()
+    return render_template('index.html', quizzes=quizzes)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -72,7 +85,7 @@ def login():
         conn.close()
         if user and check_password_hash(user[2], password):
             session['user_id'] = user[0]
-            session['is_guest'] = False
+            session['username'] = user[1]
             return redirect(url_for('index'))
         else:
             return "Invalid credentials."
@@ -95,7 +108,7 @@ def guest():
     session['is_guest'] = True  # Mark this session as a guest session
 
     conn.close()
-    return redirect(url_for('quiz'))
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():
@@ -114,12 +127,90 @@ def logout():
     conn.close()
     return redirect(url_for('index'))
 
-@app.route('/quiz')
-def quiz():
-    """Only allow logged-in users or guests to access the quiz."""
+@app.route('/create_quiz', methods=['GET', 'POST'])
+def create_quiz():
+    """Allow registered users to create quizzes."""
     if 'user_id' not in session:
-        return redirect(url_for('register'))
-    return render_template('quiz.html')
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        title = request.form['title']
+        user_id = session['user_id']
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO quizzes (title, creator_id) VALUES (?, ?)", (title, user_id))
+        quiz_id = cursor.lastrowid
+        conn.commit()
+        conn.close()
+        return redirect(url_for('add_questions', quiz_id=quiz_id))
+    return render_template('create_quiz.html')
+
+@app.route('/add_questions/<int:quiz_id>', methods=['GET', 'POST'])
+def add_questions(quiz_id):
+    """Allow users to add questions to a quiz."""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        question = request.form['question']
+        option1 = request.form['option1']
+        option2 = request.form['option2']
+        option3 = request.form['option3']
+        option4 = request.form['option4']
+        correct_option = request.form['correct_option']
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO questions (quiz_id, question, option1, option2, option3, option4, correct_option) VALUES (?, ?, ?, ?, ?, ?, ?)", 
+                       (quiz_id, question, option1, option2, option3, option4, correct_option))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('add_questions', quiz_id=quiz_id))
+    return render_template('add_questions.html', quiz_id=quiz_id)
+
+@app.route('/quiz/<int:quiz_id>')
+def quiz(quiz_id):
+    """Retrieve and display the quiz."""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, question, option1, option2, option3, option4 FROM questions WHERE quiz_id = ?", (quiz_id,))
+    questions = cursor.fetchall()
+    conn.close()
+    return render_template('quiz.html', questions=questions, quiz_id=quiz_id)
+
+@app.route('/api/questions/<int:quiz_id>')
+def api_questions(quiz_id):
+    """API endpoint to retrieve questions for a specific quiz."""
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, question, option1, option2, option3, option4 FROM questions WHERE quiz_id = ?", (quiz_id,))
+    questions = cursor.fetchall()
+    conn.close()
+    return jsonify(questions)
+
+@app.route('/submit_quiz/<int:quiz_id>', methods=['POST'])
+def submit_quiz(quiz_id):
+    """Handle the submission of quiz answers and calculate score."""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user_id = session['user_id']
+    answers = request.json.get('answers')  # Get answers from the request
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    
+    score = 0
+    for qid, answer in answers.items():
+        cursor.execute("SELECT correct_option FROM questions WHERE id = ?", (qid,))
+        correct_option = cursor.fetchone()[0]
+        if correct_option == answer:
+            score += 1
+    
+    cursor.execute("INSERT INTO scores (user_id, quiz_id, score) VALUES (?, ?, ?)", (user_id, quiz_id, score))
+    cursor.execute("INSERT INTO winners (user_id, quiz_id, points) VALUES (?, ?, ?)", (user_id, quiz_id, score))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({'score': score})
 
 @app.route('/scoreboard')
 def scoreboard():
@@ -127,46 +218,17 @@ def scoreboard():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     cursor.execute('''
-        SELECT users.username, IFNULL(quizzes.title, 'Ukjent Quiz'), scores.score
-        FROM scores
-        JOIN users ON scores.user_id = users.id
-        LEFT JOIN quizzes ON scores.quiz_id = quizzes.id
-        ORDER BY scores.score DESC
+        SELECT users.username, quizzes.title, winners.points
+        FROM winners
+        JOIN users ON winners.user_id = users.id
+        JOIN quizzes ON winners.quiz_id = quizzes.id
+        ORDER BY winners.points DESC
     ''')
     scores = cursor.fetchall()
     conn.close()
     
     return render_template('scoreboard.html', scores=scores)
 
-
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
-
-#fix scoreboard
-
-
-
-
-@app.route("/")
-def home():
-    return render_template("index.html")
-
-@app.route("/quiz")
-def quiz():
-    return render_template("quiz.html")
-
-@app.route("/scoreboard")
-def scoreboard():
-    return render_template("scoreboard.html")
-
-@app.route("/registrer")
-def register():
-    return render_template("registrer.html")
-
-@app.route("/login")
-def login():
-    return render_template("login.html")
-
-if __name__ == "__main__":
     app.run(debug=True)

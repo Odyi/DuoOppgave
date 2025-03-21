@@ -1,71 +1,19 @@
-<!DOCTYPE html>
-<html lang="no">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logg inn</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% block title %}Hvahoot - Login{% endblock %}
 
-<body>
-    <header>
-        <h1>Logg inn til Hvahoot</h1>
-    </header>
-
-
-
-    <!DOCTYPE html>
-    <html lang="no">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Min Nettside</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="{{ url_for('home') }}">Hjem</a></li>
-                <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
-                <li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
-                <li><a href="{{ url_for('register') }}">Registrer</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-            </ul>
-        </nav>
-        
-    
-        <div class="content">
-            <!-- Sideinnhold her -->
-        </div>
-    </body>
-    </html>
-    
-
-
-
-
-
-    <main>
-        <form method="POST">
-            <label for="username">Brukernavn:</label>
-            <input type="text" id="username" name="username" required>
-
-            <label for="password">Passord:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Logg inn</button>
-        </form>
-
-        <p>Har du ikke en konto? <a href="{{ url_for('register') }}">Registrer deg her</a>.</p>
-
-        <hr>
-
-        <!-- Guest Button -->
-        <a href="{{ url_for('guest') }}">
-            <button>Fortsett som gjest</button>
-        </a>
-    </main>
-</body>
-
-</html>
+{% block content %}
+<main>
+    <h2>Logg inn</h2>
+    <form method="POST">
+        <label for="username">Brukernavn:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Passord:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Logg inn</button>
+    </form>
+    <a href="{{ url_for('guest') }}">
+        <button>Continue as Guest</button>
+    </a>
+</main>
+{% endblock %}

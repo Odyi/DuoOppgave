@@ -13,7 +13,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     text-align: center;
     overflow-x: hidden;
@@ -37,21 +37,64 @@ header h1 {
 }
 
 /* Navigation Styling */
-nav {
-    margin-top: 10px;
+.navbar {
+    background-color: #333;
+    width: 100%;
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
-nav a {
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar ul li {
+    position: relative;
+    margin: 0 15px;
+}
+
+.navbar ul li a {
     text-decoration: none;
     color: white;
-    margin: 0 15px;
-    font-weight: bold;
-    transition: color 0.3s;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: background 0.3s, color 0.3s;
 }
 
-nav a:hover {
-    color: #fb9c04;
-    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.6);
+.navbar ul li a:hover {
+    background: #555;
+    border-radius: 5px;
+}
+
+.navbar ul ul {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    padding: 0;
+    top: 100%;
+    left: 0;
+}
+
+.navbar ul li:hover > ul {
+    display: block;
+}
+
+.navbar ul ul li {
+    float: none;
+    display: list-item;
+    position: relative;
+}
+
+.navbar ul ul li a {
+    padding: 10px 15px;
 }
 
 /* Main Section Styling */
@@ -62,6 +105,7 @@ main {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.7);
     width: 90%;
     max-width: 500px;
+    margin-top: 100px;
     margin-bottom: 20px;
 }
 
@@ -177,6 +221,14 @@ button:hover {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6);
 }
 
+/* Answered Option Styling */
+.answered {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 /* Scoreboard Styling */
 table {
     width: 80%;
@@ -207,43 +259,4 @@ td {
 
 tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
-}
-
-
-/* Stiler for navigasjonslinjen */
-.navbar {
-    background-color: #333;
-    padding: 10px 0;
-    text-align: center;
-}
-
-.navbar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-}
-
-.navbar ul li {
-    margin: 0 15px;
-}
-
-.navbar ul li a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    padding: 10px 15px;
-    transition: background 0.3s, color 0.3s;
-}
-
-.navbar ul li a:hover {
-    background: #555;
-    border-radius: 5px;
-}
-
-/* Stiler for innholdet under navbaren */
-.content {
-    padding: 20px;
-    text-align: center;
 }

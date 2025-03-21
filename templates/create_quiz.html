@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Hvahoot - Lag Quiz{% endblock %}
+
+{% block content %}
+<main>
+    <h2>Lag en ny Quiz</h2>
+    <form method="POST">
+        <label for="title">Quiz Tittel:</label>
+        <input type="text" id="title" name="title" required>
+        <button type="submit">Lag Quiz</button>
+    </form>
+</main>
+{% endblock %}

@@ -1,79 +1,38 @@
-<!DOCTYPE html>
-<html lang="no">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hvahoot - Hjem</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% block title %}Hvahoot - Hjem{% endblock %}
 
-<body>
-    <header>
-        <h1>Velkommen til Hvahoot!</h1>
-        <nav>
-            <a href="{{ url_for('register') }}">Registrer deg</a>
-            <a href="{{ url_for('login') }}">Logg inn</a>
-            <a href="{{ url_for('quiz') }}">Start Quiz</a>
-            <a href="{{ url_for('scoreboard') }}">Poengtavle</a>
-        </nav>
-    </header>
-
-
-
-
-    <!DOCTYPE html>
-    <html lang="no">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Min Nettside</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="{{ url_for('home') }}">Hjem</a></li>
-                <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
-                <li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
-                <li><a href="{{ url_for('register') }}">Registrer</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-            </ul>
-        </nav>
-        
-    
-        <div class="content">
-            <!-- Sideinnhold her -->
-        </div>
-    </body>
-    </html>
-    
-
-
-
-
-    <main>
-        {% if 'user_id' not in session %}
+{% block content %}
+<header>
+    <h1>Velkommen til Hvahoot!</h1>
+</header>
+<main>
+    {% if 'user_id' not in session %}
         <form method="POST" action="{{ url_for('login') }}">
             <label>Username:</label>
             <input type="text" name="username" required>
-
+            
             <label>Password:</label>
             <input type="password" name="password" required>
-
+            
             <button type="submit">Login</button>
         </form>
-
+        
         <a href="{{ url_for('guest') }}">
             <button>Continue as Guest</button>
         </a>
-        {% else %}
+    {% else %}
         <p>Du er logget inn som {{ session.get('username', 'Guest bruker') }}</p>
         <a href="{{ url_for('logout') }}"><button>Logg ut</button></a>
-        {% endif %}
+    {% endif %}
 
-        <p>Test kunnskapene dine i spennende quizer og sammenlign resultatene dine med andre!</p>
-    </main>
-</body>
+    <p>Test kunnskapene dine i spennende quizer og sammenlign resultatene dine med andre!</p>
 
-</html>
+    <h2>Tilgjengelige Quizzes</h2>
+    <ul>
+        {% for quiz in quizzes %}
+            <li><a href="{{ url_for('quiz', quiz_id=quiz[0]) }}">{{ quiz[1] }}</a></li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}

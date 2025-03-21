@@ -1,51 +1,16 @@
-<!DOCTYPE html>
-<html lang="no">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrering</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% block title %}Hvahoot - Registrer{% endblock %}
 
-<body>
-
-
-    <!DOCTYPE html>
-    <html lang="no">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Min Nettside</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-                <li><a href="{{ url_for('home') }}">Hjem</a></li>
-                <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
-                <li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
-                <li><a href="{{ url_for('register') }}">Registrer</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-            </ul>
-        </nav>
-        
-    
-        <div class="content">
-            <!-- Sideinnhold her -->
-        </div>
-    </body>
-    </html>
-    
-
-
+{% block content %}
+<main>
     <h2>Registrer deg</h2>
     <form method="POST">
-        <input type="text" name="username" placeholder="Brukernavn" required>
-        <input type="password" name="password" placeholder="Passord" required>
+        <label for="username">Brukernavn:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Passord:</label>
+        <input type="password" id="password" name="password" required>
         <button type="submit">Registrer</button>
     </form>
-    <a href="{{ url_for('login') }}">Har du allerede en konto? Logg inn her.</a>
-</body>
-
-</html>
+</main>
+{% endblock %}

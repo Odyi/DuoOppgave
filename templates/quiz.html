@@ -1,65 +1,21 @@
-<!DOCTYPE html>
-<html lang="no">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% block title %}Hvahoot - Quiz{% endblock %}
 
-<body>
-
-
-  <!DOCTYPE html>
-  <html lang="no">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Min Nettside</title>
-      <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <nav class="navbar">
-      <ul>
-          <li><a href="{{ url_for('home') }}">Hjem</a></li>
-          <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
-          <li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
-          <li><a href="{{ url_for('register') }}">Registrer</a></li>
-          <li><a href="{{ url_for('login') }}">Login</a></li>
-      </ul>
-  </nav>
-  
-  
-      <div class="content">
-          <!-- Sideinnhold her -->
-      </div>
-  </body>
-  </html>
-  
-
-
-
-  <h2>Quiz</h2>
-
-  <div class="card">
-    <img src="bilde" alt="" style="width:100%">
-    <div class="container">
-      <h4><b>Quiz</b></h4>
-      <p>Geografi</p>
+{% block content %}
+<main id="quiz-container" data-quiz-id="{{ quiz_id }}">
+    <h2>Quiz</h2>
+    <div id="questions-container">
+        {% for question in questions %}
+        <div class="question" data-question-id="{{ question[0] }}">
+            <p>{{ question[1] }}</p>
+            <button class="option" onclick="answer('{{ question[0] }}', 1)">{{ question[2] }}</button>
+            <button class="option" onclick="answer('{{ question[0] }}', 2)">{{ question[3] }}</button>
+            <button class="option" onclick="answer('{{ question[0] }}', 3)">{{ question[4] }}</button>
+            <button class="option" onclick="answer('{{ question[0] }}', 4)">{{ question[5] }}</button>
+        </div>
+        {% endfor %}
     </div>
-  </div>
-
-  <div id="quiz-container">
-    <p id="question-text"></p>
-    <button class="option" onclick="answer(1)"></button>
-    <button class="option" onclick="answer(2)"></button>
-    <button class="option" onclick="answer(3)"></button>
-    <button class="option" onclick="answer(4)"></button>
-  </div>
-  <button onclick="nextQuestion()">Neste</button>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-
-</html>
+    <button onclick="submitQuiz()">Send inn Quiz</button>
+</main>
+{% endblock %}

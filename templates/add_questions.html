@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legg til spørsmål</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul id="nav-menu">
+                <li><a href="/">Hjem</a></li>
+                <li><a href="{{ url_for('quiz', quiz_id=quiz_id) }}">Quiz</a></li>
+                <li><a href="{{ url_for('scoreboard') }}">Poengtavle</a></li>
+                <li><a href="{{ url_for('register') }}">Registrer</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% if 'user_id' in session %}
+                <li><a href="{{ url_for('create_quiz') }}">Lag Quiz</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Legg til spørsmål</h2>
+        <form method="POST">
+            <label for="question">Spørsmål:</label>
+            <input type="text" id="question" name="question" required>
+            <label for="option1">Alternativ 1:</label>
+            <input type="text" id="option1" name="option1" required>
+            <label for="option2">Alternativ 2:</label>
+            <input type="text" id="option2" name="option2" required>
+            <label for="option3">Alternativ 3:</label>
+            <input type="text" id="option3" name="option3" required>
+            <label for="option4">Alternativ 4:</label>
+            <input type="text" id="option4" name="option4" required>
+            <label for="correct_option">Riktig alternativ (1-4):</label>
+            <input type="number" id="correct_option" name="correct_option" min="1" max="4" required>
+            <button type="submit">Legg til spørsmål</button>
+        </form>
+        <button onclick="finalizeQuiz()">Fullfør Quiz</button>
+    </main>
+
+    <script>
+        function finalizeQuiz() {
+            window.location.href = "{{ url_for('quiz', quiz_id=quiz_id) }}";
+        }
+    </script>
+</body>
+</html>
